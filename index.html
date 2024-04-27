@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DncWeather</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<header>
+    <h1>DncWeather</h1>
+    <p id="p1">Endereços</p>
+    <p id="p2">Previsão do tempo</p>
+</header>
+
+<body>
+    <div id="form">
+        <div id="tituloForm">
+            <h1>Descubra Mais com Precisão:<br> Previsões do Tempo e endereços em tempo real.</h1>
+            <img src="nuvens.svg" alt=" ERROR " id="imgForm">
+        </div>
+
+        <div id="formGeral">
+            <h3 id="form">Primeiro Nome:</h3>
+            <form>
+                <label for="pnome"></label>
+                <input id="inputPadrao" type="text" placeholder="Insira seu primeiro nome:">
+            </form>
+
+            <h3 id="form">E-mail:</h3>
+            <form>
+                <label for="e-mail"></label>
+                <input id="inputPadrao" type="text" placeholder="Insira seu e-mail:">
+            </form>
+
+            <h3 id="form">Digite o CEP:</h3>
+            <form>
+                <label for="cep"></label>
+                <input id="cep" type="text" placeholder="Insira o CEP:">
+            </form>
+
+            <h3 id="form">Digite a latitude e longitude para saber a previsão:</h3>
+            <form>
+                <label for="latitudeElongitude"></label>
+                <input id="inputDuplo1" type="text" placeholder="Latitude"> 
+                <input id="inputDuplo2" type="text" placeholder="Longitude">
+                <br>
+                <input id="botao" type="button" value="Acessar" onclick="getAdressByCep() , getPrevisao()">
+                
+            </form>
+        </div>
+
+        <div id="resultadoCep">
+            <div id="tituloCep">
+                <h2>
+                    Resultado da busca por CEP:
+                </h2>
+            </div>
+            <div id="imagemCep"><img src="cep.svg" alt=" ERROR "></div>
+        </div>
+
+        <div id="dadosCep">
+            <div id="informacoes"> 
+                <p>Logradouro/nome</p>
+                <p>Bairro/Distrito</p>
+                <p>Localidade/UF</p>
+            </div>
+            <div id="resultados">
+                <p id="rua"></p>
+                <p id="bairro"></p>
+                <p id="cidade"></p>
+            </div>
+        </div>
+
+        <div id="clima">
+            <div id="tituloClima">
+                <h2>Previsão do tempo na região:</h2>
+            </div>
+            <div>
+                <img src="nuvens2.svg" alt=" ERROR " id="imagemClima">
+            </div>
+        </div>
+        <div id="previsaoClima">
+            <p  id="previsao">Previsão de tempo de acordo com a região:</p>
+        </div><br>
+
+        <footer>
+            <p>Termos de Uso | Política de Privacidade</p>
+        </footer>
+    </div>
+
+    <script>
+        async function getAdressByCep() {
+            const cep = document.getElementById('cep').value;
+            try {
+                const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+                const data = await response.json();
+                console.log(data);
+                document.getElementById('rua').innerHTML = data.logradouro;
+                document.getElementById('bairro').innerHTML = data.bairro;
+                document.getElementById('cidade').innerHTML = data.localidade;
+            } catch (error) {
+            alert(error.message);
+            }
+        }
+
+        async function getPrevisao() {
+            const lat = document.getElementById('inputDuplo1').value;
+            const lon = document.getElementById('inputDuplo2').value;
+            try {
+                const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m`);
+                const data = await response.json();
+                console.log(data);
+                document.getElementById('previsao').innerHTML = `Previsão de tempo de acordo com a região: ${data.current.temperature_2m} ºC`;
+            } catch (error) {
+            alert(error.message);
+            }
+        }
+    </script>
+</body>
+</html>
